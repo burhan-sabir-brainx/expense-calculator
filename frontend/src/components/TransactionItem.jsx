@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteTransactionAsync, CATEGORIES } from '../store/transactionsSlice';
 import { formatCurrency, formatDate, formatTime } from '../utils/helpers';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 function TransactionItem({ transaction, onEdit }) {
   const dispatch = useDispatch();
@@ -26,78 +25,71 @@ function TransactionItem({ transaction, onEdit }) {
 
   return (
     <div
-      className={`group relative bg-white rounded-lg border p-4 transition-all hover:shadow-md ${
-        isIncome ? 'border-l-4 border-l-emerald-500 border-slate-200' : 'border-l-4 border-l-red-500 border-slate-200'
+      className={`relative bg-white border border-slate-200 p-4 transition-all hover:bg-slate-50 ${
+        isIncome ? 'border-l-4 border-l-emerald-500' : 'border-l-4 border-l-red-500'
       }`}
     >
       {/* Delete Confirmation Overlay */}
       {showDeleteConfirm && (
-        <div className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-lg flex items-center justify-center gap-3 z-10">
-          <span className="text-sm text-slate-600">Delete this transaction?</span>
-          <button
-            onClick={handleDelete}
-            className="px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700"
-          >
-            Delete
-          </button>
-          <button
-            onClick={() => setShowDeleteConfirm(false)}
-            className="px-3 py-1.5 bg-slate-100 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-200"
-          >
-            Cancel
-          </button>
+        <div className="absolute inset-0 bg-white/95 flex items-center justify-center gap-4 z-20 px-6">
+          <p className="text-sm font-bold text-slate-700">Delete?</p>
+          <div className="flex gap-2">
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-all"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 
       <div className="flex items-center gap-4">
-        {/* Category Icon */}
-        <div
-          className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold ${
-            isIncome ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
-          }`}
-        >
-          {categoryData.name.charAt(0)}
-        </div>
-
         {/* Transaction Details */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-slate-900 truncate">{title}</h3>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-sm font-bold text-slate-900 truncate tracking-tight">{title}</h3>
           </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 border border-slate-200">
               {categoryData.name}
             </span>
-            <span className="text-xs text-slate-400">
-              {formatDate(createdAt)} at {formatTime(createdAt)}
+            <span className="text-[10px] text-slate-400 uppercase tracking-widest">
+              {formatDate(createdAt)}
             </span>
           </div>
         </div>
 
         {/* Amount */}
-        <div
-          className={`text-lg font-semibold tabular-nums ${
-            isIncome ? 'text-emerald-600' : 'text-red-600'
-          }`}
-        >
-          {isIncome ? '+' : '-'}{formatCurrency(Math.abs(amount))}
+        <div className="text-right px-4">
+          <p
+            className={`text-lg font-bold tabular-nums tracking-tight ${
+              isIncome ? 'text-emerald-600' : 'text-red-600'
+            }`}
+          >
+            {isIncome ? '+' : '-'}{formatCurrency(Math.abs(amount))}
+          </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => onEdit(transaction)}
-            className="p-2 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-            title="Edit"
+            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-slate-200 hover:bg-slate-900 hover:text-white transition-all"
           >
-            <PencilSquareIcon className="w-4 h-4" />
+            Edit
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="p-2 rounded-md hover:bg-red-50 text-slate-400 hover:text-red-600"
-            title="Delete"
+            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-slate-200 hover:bg-red-600 hover:text-white transition-all text-red-600"
           >
-            <TrashIcon className="w-4 h-4" />
+            Delete
           </button>
         </div>
       </div>

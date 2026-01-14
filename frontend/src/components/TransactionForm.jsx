@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTransactionAsync, updateTransactionAsync, CATEGORIES } from '../store/transactionsSlice';
 import { validateTransaction } from '../utils/helpers';
-import { PlusIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 function TransactionForm({ editingTransaction, onCancelEdit }) {
   const dispatch = useDispatch();
@@ -83,25 +82,27 @@ function TransactionForm({ editingTransaction, onCancelEdit }) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm mb-6">
-      <h2 className="text-lg font-semibold text-slate-900 mb-6">
-        {isEditing ? 'Edit Transaction' : 'Add Transaction'}
-      </h2>
+    <div className="p-8">
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+          {isEditing ? 'Edit Transaction' : 'Add Transaction'}
+        </h2>
+      </div>
       
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Transaction Type Toggle */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            Transaction Type
+        <div className="space-y-2">
+          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Type
           </label>
-          <div className="flex rounded-lg border border-slate-200 p-1 bg-slate-50">
+          <div className="flex border border-slate-200 bg-slate-50">
             <button
               type="button"
               onClick={() => setIsExpense(true)}
-              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 py-3 px-4 text-sm font-bold transition-all ${
                 isExpense
                   ? 'bg-white text-red-600 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-400 hover:text-slate-600'
               }`}
             >
               Expense
@@ -109,10 +110,10 @@ function TransactionForm({ editingTransaction, onCancelEdit }) {
             <button
               type="button"
               onClick={() => setIsExpense(false)}
-              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 py-3 px-4 text-sm font-bold transition-all ${
                 !isExpense
                   ? 'bg-white text-emerald-600 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-400 hover:text-slate-600'
               }`}
             >
               Income
@@ -121,8 +122,8 @@ function TransactionForm({ editingTransaction, onCancelEdit }) {
         </div>
 
         {/* Title Input */}
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="title" className="text-xs font-bold text-slate-400 uppercase tracking-widest">
             Description
           </label>
           <input
@@ -133,25 +134,24 @@ function TransactionForm({ editingTransaction, onCancelEdit }) {
               setTitle(e.target.value);
               if (errors.title) setErrors({ ...errors, title: null });
             }}
-            placeholder="Enter transaction description"
-            className={`w-full px-4 py-2.5 rounded-lg border ${
+            placeholder="Description"
+            className={`w-full px-4 py-3 border text-slate-900 font-medium placeholder:text-slate-300 transition-all ${
               errors.title 
-                ? 'border-red-300 focus:ring-2 focus:ring-red-100 focus:border-red-400' 
-                : 'border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400'
+                ? 'border-red-200 focus:ring-2 focus:ring-red-50 focus:border-red-400' 
+                : 'border-slate-200 focus:ring-2 focus:ring-slate-100 focus:border-slate-400'
             }`}
           />
           {errors.title && (
-            <p className="mt-1.5 text-sm text-red-600">{errors.title}</p>
+            <p className="mt-1 text-xs font-bold text-red-500 uppercase">{errors.title}</p>
           )}
         </div>
 
-        {/* Amount Input */}
-        <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-slate-700 mb-2">
-            Amount
-          </label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Amount Input */}
+          <div className="space-y-2">
+            <label htmlFor="amount" className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Amount
+            </label>
             <input
               type="number"
               id="amount"
@@ -163,70 +163,60 @@ function TransactionForm({ editingTransaction, onCancelEdit }) {
               placeholder="0.00"
               step="0.01"
               min="0"
-              className={`w-full pl-8 pr-4 py-2.5 rounded-lg border ${
+              className={`w-full px-4 py-3 border text-slate-900 font-bold tabular-nums transition-all ${
                 errors.amount 
-                  ? 'border-red-300 focus:ring-2 focus:ring-red-100 focus:border-red-400' 
-                  : 'border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400'
+                  ? 'border-red-200 focus:ring-2 focus:ring-red-50 focus:border-red-400' 
+                  : 'border-slate-200 focus:ring-2 focus:ring-slate-100 focus:border-slate-400'
               }`}
             />
+            {errors.amount && (
+              <p className="mt-1 text-xs font-bold text-red-500 uppercase">{errors.amount}</p>
+            )}
           </div>
-          {errors.amount && (
-            <p className="mt-1.5 text-sm text-red-600">{errors.amount}</p>
-          )}
-        </div>
 
-        {/* Category Select */}
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-slate-700 mb-2">
-            Category
-          </label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400 bg-white"
-          >
-            {CATEGORIES.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+          {/* Category Select */}
+          <div className="space-y-2">
+            <label htmlFor="category" className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Category
+            </label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full px-4 py-3 border border-slate-200 bg-white text-slate-900 font-medium transition-all focus:ring-2 focus:ring-slate-100 focus:border-slate-400 cursor-pointer"
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Submit Buttons */}
-        <div className="flex gap-3 pt-2">
-          {isEditing && (
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="flex-1 py-2.5 px-4 rounded-lg border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 flex items-center justify-center gap-2"
-            >
-              <XMarkIcon className="w-4 h-4" />
-              Cancel
-            </button>
-          )}
+        <div className="flex flex-col gap-3 pt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-white flex items-center justify-center gap-2 ${
+            className={`w-full py-4 font-bold text-white transition-all ${
               isExpense
                 ? 'bg-red-600 hover:bg-red-700'
                 : 'bg-emerald-600 hover:bg-emerald-700'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {isEditing ? (
-              <>
-                <CheckIcon className="w-4 h-4" />
-                Update
-              </>
-            ) : (
-              <>
-                <PlusIcon className="w-4 h-4" />
-                Add {isExpense ? 'Expense' : 'Income'}
-              </>
-            )}
+            {isEditing ? 'Update Transaction' : 'Add Transaction'}
           </button>
+          
+          {isEditing && (
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="w-full py-3 border border-slate-200 text-slate-500 font-bold text-xs uppercase hover:bg-slate-50 transition-colors"
+            >
+              Cancel
+            </button>
+          )}
         </div>
       </form>
     </div>

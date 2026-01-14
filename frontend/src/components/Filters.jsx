@@ -9,7 +9,6 @@ import {
   FILTER_TYPES,
   CATEGORIES,
 } from '../store/transactionsSlice';
-import { MagnifyingGlassIcon, XMarkIcon, FunnelIcon } from '@heroicons/react/24/outline';
 
 function Filters() {
   const dispatch = useDispatch();
@@ -35,57 +34,57 @@ function Filters() {
     searchQuery !== '';
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm mb-6">
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <FunnelIcon className="w-5 h-5 text-slate-400" />
-          <h2 className="text-lg font-semibold text-slate-900">Filters</h2>
-        </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight">Filters</h2>
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="text-sm text-slate-500 hover:text-slate-700 font-medium flex items-center gap-1"
+            className="text-xs text-red-600 hover:text-red-700 font-bold uppercase tracking-wider bg-red-50 px-3 py-1.5"
           >
-            <XMarkIcon className="w-4 h-4" />
-            Clear all
+            Reset
           </button>
         )}
       </div>
 
       {/* Search Input */}
-      <div className="relative mb-5">
-        <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search transactions..."
-          value={searchQuery}
-          onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-          className="w-full pl-10 pr-10 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => dispatch(setSearchQuery(''))}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-          >
-            <XMarkIcon className="w-5 h-5" />
-          </button>
-        )}
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+          Search
+        </label>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search transactions..."
+            value={searchQuery}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+            className="w-full px-4 py-3 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-slate-100 focus:border-slate-400 transition-all text-sm font-medium"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => dispatch(setSearchQuery(''))}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Type Filters */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-slate-700 mb-2">
-          Transaction Type
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+          Type
         </label>
-        <div className="flex rounded-lg border border-slate-200 p-1 bg-slate-50">
+        <div className="flex border border-slate-200 bg-slate-50">
           {filterButtons.map(({ type, label }) => (
             <button
               key={type}
               onClick={() => dispatch(setFilter(type))}
-              className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 py-2.5 px-3 text-xs font-bold transition-all ${
                 currentFilter === type
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-400 hover:text-slate-600'
               }`}
             >
               {label}
@@ -95,17 +94,17 @@ function Filters() {
       </div>
 
       {/* Category Filter */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">
           Category
         </label>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => dispatch(setCategoryFilter(null))}
-            className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-all ${
+            className={`px-4 py-2 text-xs font-bold transition-all border ${
               selectedCategory === null
                 ? 'bg-slate-900 text-white border-slate-900'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-600'
             }`}
           >
             All
@@ -114,10 +113,10 @@ function Filters() {
             <button
               key={cat.id}
               onClick={() => dispatch(setCategoryFilter(cat.id))}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium border transition-all ${
+              className={`px-4 py-2 text-xs font-bold transition-all border ${
                 selectedCategory === cat.id
                   ? 'bg-slate-900 text-white border-slate-900'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-600'
               }`}
             >
               {cat.name}
